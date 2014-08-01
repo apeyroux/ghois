@@ -238,6 +238,10 @@ func main() {
 		flag.Usage()
 		os.Exit(0)
 	}
-	r, _ := LookupWhois(flname)
+	r, err := LookupWhois(flname)
+	if err != nil {
+		fmt.Printf(err)
+		os.Exit(2)
+	}
 	fmt.Printf(r)
 }
