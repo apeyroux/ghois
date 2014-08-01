@@ -225,7 +225,7 @@ func WhoisServer(name string) (string, error) {
 		}
 	}
 
-	return "err", nil
+	return "", fmt.Errorf("domain not found")
 }
 
 func init() {
