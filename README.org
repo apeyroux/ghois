@@ -6,6 +6,8 @@ Simple whois in golang
 go get github.com/j4/ghois
 #+END_SRC
 
+Ou bien dwl le binaire : http://dwl.j4.pe/ghois/
+
 * Usage
 
 ** As CLI
