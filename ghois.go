@@ -2,15 +2,19 @@ package main
 
 import (
 	"bufio"
+	"encoding/json"
 	"flag"
 	"fmt"
+	"log"
 	"net"
+	"net/http"
 	"os"
 	"strings"
 )
 
 var (
-	flname string
+	flname   string
+	fllisten string
 	// http://www.nirsoft.net/whois_servers_list.html
 	// http://www.nirsoft.net/whois-servers.txt
 	whoisSrv map[string]string = map[string]string{
@@ -188,17 +192,24 @@ var (
 	}
 )
 
-func LookupWhois(name string) (string, error) {
+type WhoisResult struct {
+	Domain string
+	Server string
+	Result string
+	Error  string
+}
+
+func LookupWhois(name string) (string, string, error) {
 	var r string
 	wsrv, err := WhoisServer(name)
 
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 
 	conn, err := net.Dial("tcp", wsrv+":43")
 	if err != nil {
-		return "", err
+		return "", wsrv, err
 	}
 	q := fmt.Sprintf("%s\r\n", name)
 	fmt.Fprintf(conn, q)
@@ -213,7 +224,7 @@ func LookupWhois(name string) (string, error) {
 		r += line
 	}
 
-	return r, nil
+	return r, wsrv, nil
 }
 
 func WhoisServer(name string) (string, error) {
@@ -228,20 +239,51 @@ func WhoisServer(name string) (string, error) {
 	return "", fmt.Errorf("domain not found")
 }
 
+func queryHandler(w http.ResponseWriter, req *http.Request) {
+	query := req.URL.Path[1:]
+	r, wsrv, err := LookupWhois(query)
+	w.Header().Set("Content-Type", "application/json")
+	if err != nil {
+		log.Printf("%s %s %s %s err:%s", req.Method, req.RemoteAddr, req.UserAgent(), req.URL.Path[1:], err)
+		wr := &WhoisResult{query, wsrv, "", string(err.Error())}
+		rjs, _ := json.Marshal(&wr)
+		w.Write(rjs)
+	} else {
+		log.Printf("%s %s %s %s match:%s", req.Method, req.RemoteAddr, req.UserAgent(), req.URL.Path[1:], query)
+		wr := &WhoisResult{query, wsrv, r, ""}
+		rjs, _ := json.Marshal(&wr)
+		w.Write(rjs)
+	}
+}
+
 func init() {
 	flag.StringVar(&flname, "n", "", "query name")
+	flag.StringVar(&fllisten, "listen", "", "listen httpd ex: 127.0.0.1:8080 or :8080")
 }
 
 func main() {
 	flag.Parse()
-	if flname == "" {
+
+	if flname == "" && fllisten == "" {
 		flag.Usage()
 		os.Exit(0)
 	}
-	r, err := LookupWhois(flname)
-	if err != nil {
-		fmt.Printf("%s\n", err)
-		os.Exit(2)
+
+	if flname != "" {
+		r, _, err := LookupWhois(flname)
+		if err != nil {
+			fmt.Printf("%s\n", err)
+			os.Exit(2)
+		}
+		fmt.Printf(r)
 	}
-	fmt.Printf(r)
+
+	if fllisten != "" {
+		http.HandleFunc("/", queryHandler)
+		err := http.ListenAndServe(fllisten, nil)
+		if err != nil {
+			log.Fatal("err: ", err)
+		}
+	}
+
 }

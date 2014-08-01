@@ -5,3 +5,45 @@ Simple whois in golang
 #+BEGIN_SRC sh
 go get github.com/j4/ghois
 #+END_SRC
+
+* Usage
+
+** As CLI
+
+*ghois -n lemonde.fr*
+
+** As a Web Service
+
+#+BEGIN_SRC sh
+ghois -listen 127.0.0.1:8080
+#+END_SRC
+
+#+BEGIN_SRC sh
+ghois -listen myip:80
+#+END_SRC
+
+#+BEGIN_SRC sh
+ghois -listen :80
+#+END_SRC
+
+*http://127.0.0.1:8080/lemonde.fre*
+
+#+BEGIN_SRC json
+{
+  "Domain":"lemonde.fre",
+  "Server":"",
+  "Result":"",
+  "Error":"domain not found"
+}
+#+END_SRC
+
+*http://127.0.0.1:8080/lemonde.fr*
+
+#+BEGIN_SRC json
+{
+  "Domain":"lemonde.fr",
+  "Server":"whois.nic.fr",
+  "Result":"%%\n%% This is the AFNIC Whois server.\n%%\n%% complete date format : DD/MM/YYYY\n%% short date format    : DD/MM\n%% version              : FRNIC-2.5\n%%\n%% Rights restricted by copyright.\n%% See http://www.afnic.fr/afnic/web/mentions-legales-whois_en\n%%\n%% Use '-h' option to obtain more information about this service.\n%%\n%% [82.122.249.214 REQUEST] \u003e\u003e lemonde.fr\n%%\n%% RL Net [##########] - RL IP [#########.]\n%%\n\ndomain:      lemonde.fr\nstatus:      ACTIVE\nhold:        NO\nholder-c:    SEDM43-FRNIC\nadmin-c:     LMI49-FRNIC\ntech-c:      I10396-FRNIC\nzone-c:      NFC1-FRNIC\nnsl-id:      NSL27513-FRNIC\nregistrar:   ASCIO TECHNOLOGIES Inc.\nanniversary: 11/02\ncreated:     02/08/2005\nlast-update: 04/09/2012\nsource:      FRNIC\n\nns-list:     NSL27513-FRNIC\nnserver:     indom130.indomco.org\nnserver:     indom10.indomco.com\nnserver:     indom20.indomco.net\nnserver:     indom30.indomco.fr [213.205.102.3]\nnserver:     indom80.indomco.hk\nsource:      FRNIC\n\nregistrar:   ASCIO TECHNOLOGIES Inc.\ntype:        Isp Option 1\naddress:     Islands Brygge 55\naddress:     DK-2300 COPENHAGUE S\ncountry:     DK\nphone:       +45 33 88 61 00\nfax-no:      +45 33 88 61 01\ne-mail:      nicrelations@ascio.com\nwebsite:     http://www.ascio.com\nanonymous:   NO\nregistered:  18/01/2001\nsource:      FRNIC\n\nnic-hdl:     I10396-FRNIC\ntype:        ORGANIZATION\ncontact:     INDOM\naddress:     124-126, rue de Provence\naddress:     75008 Paris\ncountry:     FR\nphone:       +33 1 76 70 05 67\nfax-no:      +33 1 48 01 67 73\ne-mail:      indom@indom.com\nregistrar:   ASCIO TECHNOLOGIES Inc.\nchanged:     03/09/2012 nic@nic.fr\nanonymous:   NO\nobsoleted:   NO\neligstatus:  ok\neligsource:  REGISTRY\neligdate:    01/11/2013 09:51:17\nreachmedia:  email\nreachstatus: ok\nreachsource: REGISTRY\nreachdate:   01/11/2013 09:51:17\nsource:      FRNIC\n\nnic-hdl:     LMI49-FRNIC\ntype:        ORGANIZATION\ncontact:     Le Monde interactif\naddress:     80, boulevard Auguste Blanqui\naddress:     75013 Paris\ncountry:     FR\nphone:       +33 1 53 38 42 67\nfax-no:      +33 1 53 38 56 19\ne-mail:      domain_names@lemonde.fr\nregistrar:   ASCIO TECHNOLOGIES Inc.\nchanged:     03/09/2012 nic@nic.fr\nanonymous:   NO\nobsoleted:   NO\neligstatus:  ok\neligdate:    03/09/2012 16:54:25\nsource:      FRNIC\n\nnic-hdl:     SEDM43-FRNIC\ntype:        ORGANIZATION\ncontact:     SOCIETE EDITRICE DU MONDE\naddress:     80, boulevard Auguste Blanqui\naddress:     75707 Paris Cedex 13\ncountry:     FR\nphone:       +33 1 57 28 20 00\nfax-no:      +33 1 57 28 21 21\ne-mail:      domain_names@lemonde.fr\nregistrar:   ASCIO TECHNOLOGIES Inc.\nchanged:     04/09/2012 nic@nic.fr\nanonymous:   NO\nobsoleted:   NO\neligstatus:  ok\neligdate:    04/09/2012 09:34:28\nsource:      FRNIC\n\n",
+  "Error":""
+}
+#+END_SRC
