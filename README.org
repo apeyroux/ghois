@@ -6,6 +6,49 @@ Simple whois WS or CLI
 go get github.com/j4/ghois
 #+END_SRC
 
+#+BEGIN_SRC 
+ja@x220:~/codaz/ghois$ ./ghois -n lemonde.fr
+%
+% This is the AFNIC Whois server.
+%
+% complete date format : DD/MM/YYYY
+% short date format    : DD/MM
+% version              : FRNIC-2.5
+%
+% Rights restricted by copyright.
+% See http://www.afnic.fr/afnic/web/mentions-legales-whois_en
+%
+% Use '-h' option to obtain more information about this service.
+%
+% [82.122.249.214 REQUEST] >> lemonde.fr
+%
+% RL Net [##########] - RL IP [#########.]
+%
+
+domain:      lemonde.fr
+status:      ACTIVE
+hold:        NO
+holder-c:    SEDM43-FRNIC
+admin-c:     LMI49-FRNIC
+tech-c:      I10396-FRNIC
+zone-c:      NFC1-FRNIC
+nsl-id:      NSL27513-FRNIC
+registrar:   ASCIO TECHNOLOGIES Inc.
+anniversary: 11/02
+created:     02/08/2005
+last-update: 04/09/2012
+source:      FRNIC
+
+ns-list:     NSL27513-FRNIC
+nserver:     indom130.indomco.org
+nserver:     indom10.indomco.com
+nserver:     indom20.indomco.net
+nserver:     indom30.indomco.fr [213.205.102.3]
+nserver:     indom80.indomco.hk
+source:      FRNIC
+...
+#+END_SRC
+
 Ou bien dwl le binaire : http://dwl.j4.pe/ghois/
 
 * Usage
