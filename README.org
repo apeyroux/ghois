@@ -6,6 +6,15 @@ Simple whois WS or CLI
 go get github.com/j4/ghois
 #+END_SRC
 
+Ou bien dwl le binaire : http://dwl.j4.pe/ghois/
+
+* Usage
+
+** As CLI
+
+*ghois -n lemonde.fr*
+
+
 #+BEGIN_SRC 
 ja@x220:~/codaz/ghois$ ./ghois -n lemonde.fr
 %
@@ -48,14 +57,6 @@ nserver:     indom80.indomco.hk
 source:      FRNIC
 ...
 #+END_SRC
-
-Ou bien dwl le binaire : http://dwl.j4.pe/ghois/
-
-* Usage
-
-** As CLI
-
-*ghois -n lemonde.fr*
 
 ** As a Web Service
 
