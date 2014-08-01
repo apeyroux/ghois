@@ -96,4 +96,4 @@ ghois -listen :80
 
 * TODO
 
-- Mettre du go dans le WS au cas où il y est bcp de hits ;)
+Mettre du go dans le WS au cas où il y est bcp de hits ;)
