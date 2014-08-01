@@ -1,4 +1,4 @@
-Simple whois in golang
+Simple whois WS or CLI
 
 * Installation
 
