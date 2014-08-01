@@ -1,1 +1,7 @@
 Simple whois in golang
+
+* Installation
+
+#+BEGIN_SRC sh
+go get github.com/j4/ghois
+#+END_SRC
