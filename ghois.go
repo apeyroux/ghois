@@ -240,7 +240,7 @@ func main() {
 	}
 	r, err := LookupWhois(flname)
 	if err != nil {
-		fmt.Printf(err)
+		fmt.Printf("%s\n", err)
 		os.Exit(2)
 	}
 	fmt.Printf(r)
