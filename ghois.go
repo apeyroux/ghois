@@ -9,6 +9,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"regexp"
 	"strings"
 )
 
@@ -240,19 +241,44 @@ func WhoisServer(name string) (string, error) {
 }
 
 func queryHandler(w http.ResponseWriter, req *http.Request) {
-	query := req.URL.Path[1:]
-	r, wsrv, err := LookupWhois(query)
-	w.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		log.Printf("%s %s %s %s err:%s", req.Method, req.RemoteAddr, req.UserAgent(), req.URL.Path[1:], err)
-		wr := &WhoisResult{query, wsrv, "", string(err.Error())}
-		rjs, _ := json.Marshal(&wr)
-		w.Write(rjs)
+	//	query := req.URL.Path[1:]
+	path := req.URL.Path[1:]
+	re := regexp.MustCompile("^(json|txt)/(.*)$")
+	reresult := re.FindStringSubmatch(path)
+	if reresult != nil {
+		query := reresult[2]
+		action := reresult[1]
+		r, wsrv, err := LookupWhois(query)
+		switch action {
+		case "json":
+			w.Header().Set("Content-Type", "application/json")
+			if err != nil {
+				log.Printf("%s %s %s %s err:%s", req.Method, req.RemoteAddr, req.UserAgent(), req.URL.Path[1:], err)
+				wr := &WhoisResult{query, wsrv, "", string(err.Error())}
+				rjs, _ := json.Marshal(&wr)
+				w.Write(rjs)
+			} else {
+				log.Printf("%s %s %s %s match:%s", req.Method, req.RemoteAddr, req.UserAgent(), req.URL.Path[1:], query)
+				wr := &WhoisResult{query, wsrv, r, ""}
+				rjs, _ := json.Marshal(&wr)
+				w.Write(rjs)
+			}
+		case "txt":
+			w.Header().Set("Content-Type", "text/plain")
+			if err != nil {
+				log.Printf("%s %s %s %s err:%s", req.Method, req.RemoteAddr, req.UserAgent(), req.URL.Path[1:], err)
+				fmt.Fprintf(w, "err: %s", string(err.Error()))
+			} else {
+				log.Printf("%s %s %s %s match:%s", req.Method, req.RemoteAddr, req.UserAgent(), req.URL.Path[1:], query)
+				wr := &WhoisResult{query, wsrv, r, ""}
+				fmt.Fprintf(w, "%s", wr.Result)
+			}
+		default:
+			log.Printf("%s %s %s %s match:%s", req.Method, req.RemoteAddr, req.UserAgent(), req.URL.Path[1:], query)
+			fmt.Fprintf(w, "Pas la bonne action (txt ou json) %s", action)
+		}
 	} else {
-		log.Printf("%s %s %s %s match:%s", req.Method, req.RemoteAddr, req.UserAgent(), req.URL.Path[1:], query)
-		wr := &WhoisResult{query, wsrv, r, ""}
-		rjs, _ := json.Marshal(&wr)
-		w.Write(rjs)
+		fmt.Fprint(w, "Usage :\n\n\t- Format txt : http://whois/txt/lemonde.fr\n\t- Format json : http://whois/json/lemonde.fr")
 	}
 }
 
